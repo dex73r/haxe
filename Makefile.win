@@ -63,7 +63,7 @@ package_choco:
 
 package_installer_win:
 	$(eval OUTFILE := $(shell pwd)/$(PACKAGE_OUT_DIR)/$(PACKAGE_FILE_NAME)_installer.zip)
-	$(eval VERSION := $(shell haxe -version 2>&1))
+	$(eval VERSION := $(shell haxe -version 2>&1 | cut -d ' ' -f1))
 	rm -rf $(INSTALLER_TMP_DIR)/resources
 	# neko
 	mkdir $(INSTALLER_TMP_DIR)/resources
@@ -82,7 +82,6 @@ package_installer_win:
 	cp extra/*.nsh $(INSTALLER_TMP_DIR)
 	cp -rf extra/images $(INSTALLER_TMP_DIR)
 	# nsis
-	echo $(VERSION)
 	sed -i "s/%%VERSION%%/$(VERSION)/g" $(INSTALLER_TMP_DIR)/installer.nsi
 	sed -i "s/%%VERSTRING%%/$(VERSION)/g" $(INSTALLER_TMP_DIR)/installer.nsi
 	sed -i "s/%%VERLONG%%/$(VERSION)/g" $(INSTALLER_TMP_DIR)/installer.nsi
