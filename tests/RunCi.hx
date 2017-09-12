@@ -725,6 +725,9 @@ class RunCi {
 	}
 
 	static function getLatestNeko() {
+		if (!FileSystem.exists('installer')) {
+			FileSystem.createDirectory('installer');
+		}
 		var src = 'http://nekovm.org/media/neko-2.1.0-';
 		var suffix = systemName == 'Windows' ? 'win.zip' : 'osx64.tar.gz';
 		src += suffix;

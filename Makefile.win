@@ -74,6 +74,9 @@ package_installer_win:
 	# haxe
 	7z x -y $(PACKAGE_OUT_DIR)/$(PACKAGE_FILE_NAME)_bin.zip -o$(INSTALLER_TMP_DIR)/resources
 	mv $(INSTALLER_TMP_DIR)/resources/haxe* $(INSTALLER_TMP_DIR)/resources/haxe
+	# haxesetup.exe
+	cd extra; haxelib run hxcpp build-haxesetup.xml
+	cp extra/haxesetup.exe $(INSTALLER_TMP_DIR)/resources/haxe
 	# extra
 	cp extra/*.nsi $(INSTALLER_TMP_DIR)
 	cp extra/*.nsh $(INSTALLER_TMP_DIR)
