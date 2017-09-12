@@ -62,7 +62,7 @@ package_choco:
 	rm -rf out/choco
 
 package_installer_win:
-	$(eval OUTFILE := $(shell pwd)/$(PACKAGE_OUT_DIR)/$(PACKAGE_FILE_NAME)_installer.zip)
+	$(eval OUTFILE := $(PACKAGE_OUT_DIR)/$(PACKAGE_FILE_NAME)_installer.zip)
 	$(eval VERSION := $(shell haxe -version 2>&1 | cut -d ' ' -f1))
 	rm -rf $(INSTALLER_TMP_DIR)/resources
 	# neko
