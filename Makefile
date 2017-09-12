@@ -278,20 +278,20 @@ package_installer_mac:
 	cd $(INSTALLER_TMP_DIR)/tgz; find . | cpio -o --format odc | gzip -c > ../pkg/files.pkg/Payload
 	cd $(INSTALLER_TMP_DIR)/pkg/files.pkg && bash -c "INSTKB=$$(du -sk ../../tgz | awk '{print $$1;}'); \
 	du -sk ../../tgz; \
-	echo $INSTKB ; \
-	INSTKBH=`expr $${INSTKB} - 4`; \
-	echo $INSTKBH ;\
-	sed -i \"s/%%INSTKB%%/$$INSTKBH/g\" PackageInfo ;\
-	sed -i \"s/%%VERSION%%/$(VERSION)/g\" PackageInfo ;\
-	sed -i \"s/%%VERSTRING%%/$(VERSION)/g\" PackageInfo ;\
-	sed -i \"s/%%VERLONG%%/$(VERSION)/g\" PackageInfo ;\
-	sed -i \"s/%%NEKOVER%%/$(NEKOVER)/g\" PackageInfo ;\
+	echo $$INSTKB ; \
+	INSTKBH=`expr $$INSTKB - 4`; \
+	echo $$INSTKBH ;\
+	sed -i'' 's/%%INSTKB%%/$$INSTKBH/g' PackageInfo ;\
+	sed -i'' 's/%%VERSION%%/$(VERSION)/g' PackageInfo ;\
+	sed -i'' 's/%%VERSTRING%%/$(VERSION)/g' PackageInfo ;\
+	sed -i'' 's/%%VERLONG%%/$(VERSION)/g' PackageInfo ;\
+	sed -i'' 's/%%NEKOVER%%/$(NEKOVER)/g' PackageInfo ;\
 	cd .. ;\
-	sed -i \"s/%%VERSION%%/$(VERSION)/g\" Distribution ;\
-	sed -i \"s/%%VERSTRING%%/$(VERSION)/g\" Distribution ;\
-	sed -i \"s/%%VERLONG%%/$(VERSION)/g\" Distribution ;\
-	sed -i \"s/%%NEKOVER%%/$(NEKOVER)/g\" Distribution ;\
-	sed -i \"s/%%INSTKB%%/$$INSTKBH/g\" Distribution"
+	sed -i'' 's/%%VERSION%%/$(VERSION)/g' Distribution ;\
+	sed -i'' 's/%%VERSTRING%%/$(VERSION)/g' Distribution ;\
+	sed -i'' 's/%%VERLONG%%/$(VERSION)/g' Distribution ;\
+	sed -i'' 's/%%NEKOVER%%/$(NEKOVER)/g' Distribution ;\
+	sed -i'' 's/%%INSTKB%%/$$INSTKBH/g' Distribution"
 	# repackage
 	cd $(INSTALLER_TMP_DIR)/pkg; xar --compression none -cf ../$(PACKAGE_FILE_NAME).pkg *
 	# tar

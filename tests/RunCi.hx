@@ -708,7 +708,6 @@ class RunCi {
 				if (doInstaller) {
 					getLatestNeko();
 					var cygRoot = Sys.getEnv("CYG_ROOT");
-					trace(cygRoot);
 					if (cygRoot != null) {
 						runCommand('$cygRoot/bin/bash', ['-lc', "cd \"$OLDPWD\" && make -s -f Makefile.win package_installer_win"]);
 					} else {
