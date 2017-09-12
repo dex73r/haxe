@@ -156,7 +156,7 @@ quickcpp: build_src build_pass_4 copy_haxetoolkit
 
 CPP_OS := $(shell uname)
 ifeq ($(CPP_OS),Linux)
-copy_haxetoolkit: 
+copy_haxetoolkit:
 	sudo cp haxe /usr/bin/haxe
 else
 copy_haxetoolkit: /cygdrive/c/HaxeToolkit/haxe/haxe.exe
@@ -261,7 +261,7 @@ package_installer_mac:
 	bash -c "rm -rf $(INSTALLER_TMP_DIR)/{resources,pkg,tgz,haxe.tar.gz}"
 	mkdir $(INSTALLER_TMP_DIR)/resources
 	# neko - unpack to change the dir name
-	cd $(INSTALLER_TMP_DIR)/resources && tar -zxvf ../neko-mac.tar.gz
+	cd $(INSTALLER_TMP_DIR)/resources && tar -zxvf ../neko-osx64.tar.gz
 	mv $(INSTALLER_TMP_DIR)/resources/neko* $(INSTALLER_TMP_DIR)/resources/neko
 	cd $(INSTALLER_TMP_DIR)/resources && tar -zcvf neko.tar.gz neko
 	# haxe - unpack to change the dir name
