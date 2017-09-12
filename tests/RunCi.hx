@@ -707,7 +707,13 @@ class RunCi {
 			} else {
 				if (doInstaller) {
 					getLatestNeko();
-					runCommand("make", ["-s", 'package_installer_win']);
+					var cygRoot = Sys.getEnv("CYG_ROOT");
+					trace(cygRoot);
+					if (cygRoot != null) {
+						runCommand('$cygRoot/bin/bash', ['-lc', "cd \"$OLDPWD\" && make -s -f Makefile.win package_installer_win"]);
+					} else {
+						runCommand("make", ['-f', 'Makefile.win', "-s", 'package_installer_win']);
+					}
 				}
 				for (file in sys.FileSystem.readDirectory('out')) {
 					if (file.startsWith('haxe')) {
