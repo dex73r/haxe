@@ -574,7 +574,8 @@ class RunCi {
 	static function deploy():Void {
 
 		var doDocs = isDeployApiDocsRequired();
-		var doNightlies = isDeployNightlies();
+		var doNightlies = isDeployNightlies(),
+				doInstaller = doNightlies && shouldDeployInstaller();
 
 		if (doDocs || doNightlies) {
 			changeDirectory(repoDir);
@@ -591,7 +592,12 @@ class RunCi {
 				}
 			}
 			if (doNightlies) {
-				deployNightlies();
+				if (doInstaller && !doDocs) {
+					// generate doc
+					runCommand("make", ["-s", "install_dox"]);
+					runCommand("make", ["-s", "package_doc"]);
+				}
+				deployNightlies(doInstaller);
 			}
 		}
 	}
@@ -625,6 +631,14 @@ class RunCi {
 		}
 	}
 
+	static function shouldDeployInstaller() {
+		if (Sys.sytemName() == 'Linux') {
+			return false;
+		}
+		var rev = Sys.getEnv('ADD_REVISION');
+		return rev != null && rev != "0";
+	}
+
 	static function isDeployApiDocsRequired () {
 		return gitInfo.branch == "development" &&
 			Sys.getEnv("DEPLOY_API_DOCS") != null &&
@@ -647,7 +661,7 @@ class RunCi {
 	/**
 		Deploy source package to hxbuilds s3
 	*/
-	static function deployNightlies():Void {
+	static function deployNightlies(doInstaller:Bool):Void {
 		var gitTime = commandResult("git", ["show", "-s", "--format=%ct", "HEAD"]).stdout;
 		var tzd = {
 			var z = Date.fromTime(0);
@@ -664,6 +678,10 @@ class RunCi {
 		) {
 			if (ci == TravisCI) {
 				runCommand("make", ["-s", "package_unix"]);
+				if (doInstaller) {
+					getLatestNeko();
+					runCommand("make", ["-s", 'package_installer_mac']);
+				}
 				if (Sys.systemName() == 'Linux') {
 					// source
 					for (file in sys.FileSystem.readDirectory('out')) {
@@ -674,23 +692,47 @@ class RunCi {
 					}
 				}
 				for (file in sys.FileSystem.readDirectory('out')) {
-					if (file.startsWith('haxe') && file.endsWith('_bin.tar.gz')) {
-						var name = Sys.systemName() == "Linux" ? 'linux64' : 'mac';
-						submitToS3(name, 'out/$file');
-						break;
+					if (file.startsWith('haxe')) {
+						if (file.endsWith('_bin.tar.gz')) {
+							var name = Sys.systemName() == "Linux" ? 'linux64' : 'mac';
+							submitToS3(name, 'out/$file');
+						} else if (file.endsWIth('_installer.tar.gz')) {
+							submitToS3('mac-installer', 'out/$file');
+						}
 					}
 				}
 			} else {
+				if (doInstaller) {
+					getLatestNeko();
+					runCommand("make", ["-s", 'package_installer_win']);
+				}
 				for (file in sys.FileSystem.readDirectory('out')) {
-					if (file.startsWith('haxe') && file.endsWith('_bin.zip')) {
-						submitToS3('windows', 'out/$file');
-						break;
+					if (file.startsWith('haxe')) {
+						if (file.endsWith('_bin.zip')) {
+							submitToS3('windows', 'out/$file');
+						} else if (file.endsWith('_installer.zip')) {
+							submitToS3('windows-installer', 'out/$file');
+						}
 					}
 				}
 			}
 		} else {
 			trace('Not deploying nightlies');
 		}
+	}
+
+	static function getLatestNeko() {
+		var src = 'http://nekovm.org/media/neko-2.1.0-';
+		var suffix = Sys.systemName() == 'Windows' ? 'win.zip' : 'osx64.tar.gz';
+		src += suffix;
+		runCommand("wget", [src, '-O', 'installer/neko-$suffix'], true);
+	}
+
+	static function createNsiInstaller() {
+		if (!FileSystem.exists('installer')) {
+			FileSystem.createDirectory('installer');
+		}
+		getLatestNeko();
 	}
 
 	static function fileExtension(file:String) {
