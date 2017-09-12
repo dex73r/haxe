@@ -62,7 +62,6 @@ package_choco:
 	rm -rf out/choco
 
 package_installer_win:
-	$(eval DOCFILE := $(shell pwd)/$(PACKAGE_OUT_DIR)/$(PACKAGE_FILE_NAME)_doc.zip)
 	$(eval OUTFILE := $(shell pwd)/$(PACKAGE_OUT_DIR)/$(PACKAGE_FILE_NAME)_installer.zip)
 	$(eval VERSION := $(shell haxe -version 2>&1))
 	rm -rf $(INSTALLER_TMP_DIR)/resources
@@ -81,9 +80,6 @@ package_installer_win:
 	cp extra/*.nsi $(INSTALLER_TMP_DIR)
 	cp extra/*.nsh $(INSTALLER_TMP_DIR)
 	cp -rf extra/images $(INSTALLER_TMP_DIR)
-	# doc
-	mkdir $(INSTALLER_TMP_DIR)/resources/haxe/doc
-	cd $(INSTALLER_TMP_DIR)/resources/haxe/doc && 7z x -y $(DOCFILE)
 	# nsis
 	sed -i "s/%%VERSION%%/$(VERSION)/g" $(INSTALLER_TMP_DIR)/installer.nsi
 	sed -i "s/%%VERSTRING%%/$(VERSION)/g" $(INSTALLER_TMP_DIR)/installer.nsi

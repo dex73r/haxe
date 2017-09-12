@@ -592,7 +592,7 @@ class RunCi {
 				}
 			}
 			if (doNightlies) {
-				if (doInstaller && !doDocs) {
+				if (doInstaller && !doDocs && systemName != 'Windows') {
 					// generate doc
 					runCommand("make", ["-s", "install_dox"]);
 					runCommand("make", ["-s", "package_doc"]);
