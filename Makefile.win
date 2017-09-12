@@ -74,7 +74,7 @@ package_installer_win:
 	7z x -y $(PACKAGE_OUT_DIR)/$(PACKAGE_FILE_NAME)_bin.zip -o$(INSTALLER_TMP_DIR)/resources
 	mv $(INSTALLER_TMP_DIR)/resources/haxe* $(INSTALLER_TMP_DIR)/resources/haxe
 	# haxesetup.exe
-	haxelib path hxcpp || haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp
+	haxelib path hxcpp || haxelib install hxcpp
 	cd extra; haxelib run hxcpp build-haxesetup.xml
 	cp extra/haxesetup.exe $(INSTALLER_TMP_DIR)/resources/haxe
 	# extra

@@ -277,7 +277,10 @@ package_installer_mac:
 	mkdir $(INSTALLER_TMP_DIR)/tgz; mv $(INSTALLER_TMP_DIR)/resources/*.tar.gz $(INSTALLER_TMP_DIR)/tgz
 	cd $(INSTALLER_TMP_DIR)/tgz; find . | cpio -o --format odc | gzip -c > ../pkg/files.pkg/Payload
 	cd $(INSTALLER_TMP_DIR)/pkg/files.pkg && bash -c "INSTKB=$$(du -sk ../../tgz | awk '{print $$1;}'); \
-	INSTKBH=$$(expr $${INSTKB} - 4); \
+	du -sk ../../tgz; \
+	echo $INSTKB ; \
+	INSTKBH=`expr $${INSTKB} - 4`; \
+	echo $INSTKBH ;\
 	sed -i \"s/%%INSTKB%%/$$INSTKBH/g\" PackageInfo ;\
 	sed -i \"s/%%VERSION%%/$(VERSION)/g\" PackageInfo ;\
 	sed -i \"s/%%VERSTRING%%/$(VERSION)/g\" PackageInfo ;\
