@@ -86,5 +86,5 @@ package_installer_win:
 	sed -i "s/%%VERSTRING%%/$(VERSION)/g" $(INSTALLER_TMP_DIR)/installer.nsi
 	sed -i "s/%%VERLONG%%/$(VERSION)/g" $(INSTALLER_TMP_DIR)/installer.nsi
 	cd $(INSTALLER_TMP_DIR) && makensis installer.nsi
-	cd $(INSTALLER_TMP_DIR) && 7z a -r -tzip $(OUTFILE) *.exe
+	7z a -r -tzip $(OUTFILE) $(INSTALLER_TMP_DIR)/*.exe
 	dir $(PACKAGE_OUT_DIR)
