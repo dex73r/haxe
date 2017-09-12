@@ -580,7 +580,7 @@ class RunCi {
 		if (doDocs || doNightlies) {
 			changeDirectory(repoDir);
 			if (doDocs) {
-				if (Sys.systemName() != 'Windows') {
+				if (systemName != 'Windows') {
 					// generate doc
 					runCommand("make", ["-s", "install_dox"]);
 					runCommand("make", ["-s", "package_doc"]);
@@ -632,7 +632,7 @@ class RunCi {
 	}
 
 	static function shouldDeployInstaller() {
-		if (Sys.sytemName() == 'Linux') {
+		if (systemName == 'Linux') {
 			return false;
 		}
 		if (gitInfo.branch == 'nightly-travis') {
@@ -685,7 +685,7 @@ class RunCi {
 					getLatestNeko();
 					runCommand("make", ["-s", 'package_installer_mac']);
 				}
-				if (Sys.systemName() == 'Linux') {
+				if (systemName == 'Linux') {
 					// source
 					for (file in sys.FileSystem.readDirectory('out')) {
 						if (file.startsWith('haxe') && file.endsWith('_src.tar.gz')) {
@@ -697,9 +697,9 @@ class RunCi {
 				for (file in sys.FileSystem.readDirectory('out')) {
 					if (file.startsWith('haxe')) {
 						if (file.endsWith('_bin.tar.gz')) {
-							var name = Sys.systemName() == "Linux" ? 'linux64' : 'mac';
+							var name = systemName == "Linux" ? 'linux64' : 'mac';
 							submitToS3(name, 'out/$file');
-						} else if (file.endsWIth('_installer.tar.gz')) {
+						} else if (file.endsWith('_installer.tar.gz')) {
 							submitToS3('mac-installer', 'out/$file');
 						}
 					}
@@ -726,7 +726,7 @@ class RunCi {
 
 	static function getLatestNeko() {
 		var src = 'http://nekovm.org/media/neko-2.1.0-';
-		var suffix = Sys.systemName() == 'Windows' ? 'win.zip' : 'osx64.tar.gz';
+		var suffix = systemName == 'Windows' ? 'win.zip' : 'osx64.tar.gz';
 		src += suffix;
 		runCommand("wget", [src, '-O', 'installer/neko-$suffix'], true);
 	}
