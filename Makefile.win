@@ -82,6 +82,7 @@ package_installer_win:
 	cp extra/*.nsh $(INSTALLER_TMP_DIR)
 	cp -rf extra/images $(INSTALLER_TMP_DIR)
 	# nsis
+	echo $(VERSION)
 	sed -i "s/%%VERSION%%/$(VERSION)/g" $(INSTALLER_TMP_DIR)/installer.nsi
 	sed -i "s/%%VERSTRING%%/$(VERSION)/g" $(INSTALLER_TMP_DIR)/installer.nsi
 	sed -i "s/%%VERLONG%%/$(VERSION)/g" $(INSTALLER_TMP_DIR)/installer.nsi
