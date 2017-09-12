@@ -635,6 +635,9 @@ class RunCi {
 		if (Sys.sytemName() == 'Linux') {
 			return false;
 		}
+		if (gitInfo.branch == 'nightly-travis') {
+			return true;
+		}
 		var rev = Sys.getEnv('ADD_REVISION');
 		return rev != null && rev != "0";
 	}
